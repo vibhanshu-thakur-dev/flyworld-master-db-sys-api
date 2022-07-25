@@ -38,7 +38,7 @@ http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/m
     </http:listener-config>
     
     <!-- API KIT config -->
-    <apikit:config name="flyworld-master-db-sys-api-config" api="resource::e21be80f-abea-439d-be16-01cb5bfb1f0e:flyworld-master-db-sys-api:1.0.2:raml:zip:flyworld-master-db-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <apikit:config name="flyworld-master-db-sys-api-config" api="resource::e21be80f-abea-439d-be16-01cb5bfb1f0e:flyworld-master-db-sys-api:1.0.3:raml:zip:flyworld-master-db-sys-api.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
 	
 	<!-- Config to declare global error handler -->
 	<configuration doc:name="Configuration" doc:id="3e084899-9174-480a-892f-12c4ca0c9e29" defaultErrorHandler-ref="global-error-handler" />

@@ -16,6 +16,21 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 		<error-handler ref="apikit-error-handler" />
         
     </flow>
+    
+    <flow name="get:\ping:flyworld-master-db-sys-api-config">
+		<ee:transform doc:name="Transform Message" doc:id="3a7e94cb-cc94-4472-b371-fab5b168c7ba" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status:"OK",
+	applicationName: app.name,
+	timestamp: now()
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+    </flow>
     <flow name="put:\flights\(id):application\json:flyworld-master-db-sys-api-config">
 		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:name="set variable id">
             <ee:variables>

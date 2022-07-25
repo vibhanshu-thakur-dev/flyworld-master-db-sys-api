@@ -57,7 +57,7 @@
 		<dependency>
             <groupId>e21be80f-abea-439d-be16-01cb5bfb1f0e</groupId>
             <artifactId>flyworld-master-db-sys-api</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.3</version>
             <classifier>raml</classifier>
             <type>zip</type>
         </dependency>
