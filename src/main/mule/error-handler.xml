@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<error-handler name="apikit-error-handler">
+	<on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+			<flow-ref doc:name="format-error-response-sub-flow" doc:id="850fff20-747e-41ca-8025-7f38435c69f3" name="format-error-response-sub-flow"/>
+            
+</on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                
+                <flow-ref doc:name="format-error-response-sub-flow" doc:id="e88ddb79-a0d3-4304-8d12-b856c7167e67" name="format-error-response-sub-flow"/>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                
+                <flow-ref doc:name="format-error-response-sub-flow" doc:id="b7e8bb6c-2781-4230-a01a-ba0e30f899d2" name="format-error-response-sub-flow"/>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                <flow-ref doc:name="format-error-response-sub-flow" doc:id="875bac75-ff9e-4619-be66-81a9d9817530" name="format-error-response-sub-flow"/>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                <flow-ref doc:name="format-error-response-sub-flow" doc:id="699679b7-2454-441a-9dcf-216dd46408b3" name="format-error-response-sub-flow"/>
+                
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+                <flow-ref doc:name="format-error-response-sub-flow" doc:id="f0abc0c4-95a2-4098-b675-2b7a982753ba" name="format-error-response-sub-flow"/>
+                
+            </on-error-propagate>
+   
+	</error-handler>
+	<error-handler name="global-error-handler" doc:id="e4b6b393-c8ee-411e-836b-b176b3c79efa" >
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="0258758e-6b24-4a58-b8da-4bbb6324dc26" type="DB:CANNOT_REACH,DB:CONNECTIVITY">
+			<logger level="ERROR" doc:name="Log error" doc:id="2a70244a-079a-4816-926b-ba474d9bfccd" message="#[output&#10;application/json&#10;---&#10;{&#10;	exceptionCause: error.exception.cause.cause.detailMessage,&#10;	location: error.failingComponent,&#10;	correlationId: correlationId,&#10;	errorType: error.errorType.asString,&#10;	detailedDescription: error.detailedDescription&#10;}]" category="error"/>
+			<ee:transform doc:name="Transform Message" doc:id="8ee0c7f4-7640-4b57-ab93-6030dcda01ab" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+500]]></ee:set-variable>
+					<ee:set-variable variableName="errorResponse" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	errorMessage: "Connection to the datbase could not be established."
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="format-error-response-sub-flow" doc:id="6d806df1-41c7-46a9-8118-b1fd522f31e3" name="format-error-response-sub-flow"/>
+		</on-error-continue>
+		
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bf6bc1a1-3058-4c9d-9750-75a0bf183cde" type="DB:CANNOT_REACH,DB:CONNECTIVITY">
+			<logger level="ERROR" doc:name="Log error" doc:id="ccb3d9d5-b106-4c1d-8fbf-d20c02c98244" message="#[output
+&#10;application/json
+&#10;---
+&#10;{
+&#10;	exceptionCause: error.exception.cause.cause.detailMessage,
+&#10;	location: error.failingComponent,
+&#10;	correlationId: correlationId,
+&#10;	errorType: error.errorType.asString,
+&#10;	detailedDescription: error.detailedDescription
+&#10;}]" category="error"/>
+			<ee:transform doc:name="Transform Message" doc:id="87d22609-84d3-407c-8ba0-4afff6f752e0" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+500]]></ee:set-variable>
+					<ee:set-variable variableName="errorResponse" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	errorMessage: "Connection to the datbase could not be established."
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="format-error-response-sub-flow" doc:id="024212f6-6e78-4943-8fd4-32465abb3c47" name="format-error-response-sub-flow"/>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="daa0eb1d-717f-43cc-9e47-b79deca90dce" type="DB:QUERY_EXECUTION">
+						<logger level="ERROR" doc:name="Log error" doc:id="ee8c04cd-fbaa-4112-becc-36439721cbcd" message="#[output
+&#10;application/json
+&#10;---
+&#10;{
+&#10;	exceptionCause: error.exception.cause.cause.detailMessage,
+&#10;	location: error.failingComponent,
+&#10;	correlationId: correlationId,
+&#10;	errorType: error.errorType.asString,
+&#10;	detailedDescription: error.detailedDescription
+&#10;}]" category="error"/>
+			<ee:transform doc:name="Transform Message" doc:id="c99215ed-76aa-4c3a-9ec5-0d21ba2af52b" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+400]]></ee:set-variable>
+					<ee:set-variable variableName="errorResponse" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	errorMessage: error.detailedDescription
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="format-error-response-sub-flow" doc:id="a8b2175e-c538-4bd1-bece-2d0d20a742f1" name="format-error-response-sub-flow"/>
+		</on-error-continue>
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="586d9cd3-eb3b-4384-84bd-6ef00a8e60e7" type="ANY">
+					<logger level="ERROR" doc:name="Log error" doc:id="7fe16c72-90fd-4c8d-83e3-e3e1322eab43" message="#[output
+&#10;application/json
+&#10;---
+&#10;{
+&#10;	exceptionCause: error.exception.cause.cause.detailMessage,
+&#10;	location: error.failingComponent,
+&#10;	correlationId: correlationId,
+&#10;	errorType: error.errorType.asString,
+&#10;	detailedDescription: error.detailedDescription
+&#10;}]" category="error"/>
+			<ee:transform doc:name="Transform Message" doc:id="d6a9d987-5b20-4a6d-a70b-43f480e6fed1" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+500]]></ee:set-variable>
+					<ee:set-variable variableName="errorResponse" ><![CDATA[%dw 2.0
+output application/java
+---
+{
+	errorMessage: "Something went wrong. Please check logs for details."
+}]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+			<flow-ref doc:name="format-error-response-sub-flow" doc:id="50a53ee6-2191-412a-b7c9-a23233f84932" name="format-error-response-sub-flow"/>
+		</on-error-continue>
+		
+	</error-handler>
+	<sub-flow name="format-error-response-sub-flow" doc:id="4623fda0-3ef1-444b-987e-c6878c9cf3d3" >
+		<ee:transform doc:name="Transform Message" doc:id="4e8f23d0-f49b-4c26-8a21-13c9ceb2ca50" >
+			<ee:message >
+				<ee:set-payload resource="dwl/error/format-error-response.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	
+</mule>

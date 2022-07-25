@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-flight-by-id-flow" doc:id="3aa27bbd-1524-4ad2-b716-ff58dffe1c39" >
+		<db:query-single doc:name="get flght by ID" doc:id="6037de26-5d56-43f0-a5f2-bc0a522fc820" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from flight_details where flightId= :flightId ;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'flightId':vars.id}]]]></db:input-parameters>
+		</db:query-single>
+		<choice doc:name="Choice" doc:id="17c56edf-a60d-4fda-8dea-24b3407749ab" >
+			<when expression="#[!isEmpty(payload)]">
+				<ee:transform doc:name="set response" doc:id="5dc9bfb7-62d3-4f71-89d9-b9122c99c51f">
+			<ee:message>
+				<ee:set-payload resource="dwl/get-flight-by-id-response.dwl" />
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="4bde5616-e7f8-47ef-a4a9-7488028d757c" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "status": "error",
+  "message": "No flight details found for flight ID" ++ vars.id,
+  "correlationId": correlationId
+} 
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="delete-flights-by-id-flow" doc:id="b2516d52-29ea-45f3-b207-85d20946ebd1" >
+		<db:delete doc:name="delete by ID" doc:id="4dff017c-8710-4f34-8d37-c6eb9f196786" config-ref="Database_Config">
+			<db:sql ><![CDATA[delete from flight_details where flightId= :flightId;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'flightId':vars.id}]]]></db:input-parameters>
+		</db:delete>
+		<choice doc:name="Choice" doc:id="32b9c820-3628-44e1-a3d2-de5972c309b2" >
+			<when expression="#[payload==1]">
+				<ee:transform doc:name="set response" doc:id="0d420cbd-9008-40d3-a59c-c5776215d835">
+			<ee:message>
+				<ee:set-payload resource="dwl/set-delete-flight-response.dwl" />
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="cb05db8a-93ec-4e54-a1f8-b1f27989f055" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "status": "error",
+  "message": "Cannot delete non-existent entry. There are no flights with flight ID: " ++ vars.id,
+  "correlationId": correlationId
+} 
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="update-flights-by-id-flow" doc:id="cfe4b63a-49d8-4885-861f-62ef861e0ec8" >
+		<flow-ref doc:name="validate-flight-time-sub-flow" doc:id="73514bbb-e086-4580-a975-2f37e5effe95" name="validate-flight-time-sub-flow"/>
+		<db:update doc:name="update by id" doc:id="647cc72d-6d60-42c1-9fea-ec157b348939" config-ref="Database_Config">
+			<db:sql ><![CDATA[UPDATE flights_master.flight_details SET flightNumber = :flightNumber, source = :source, destination = :destination , sourceCode = :sourceCode, destinationCode = :destinationCode, hasBusinessClass = :hasBusinessClass, flightTime = :flightTime WHERE (flightId = :flightId);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'flightId': vars.id, 'flightNumber':payload.flightNumber, 'source':payload.source, 'sourceCode': payload.sourceCode, 'destination': payload.destination ,'destinationCode' : payload.destinationCode, 'flightTime': payload.flightTime, 'hasBusinessClass': if(payload.hasBusinessClass == true) 1 else 0}]]]></db:input-parameters>
+		</db:update>
+		<choice doc:name="Choice" doc:id="dbde3842-b136-46ae-a061-d04b8e24ecd9" >
+			<when expression="#[payload.affectedRows == 1]">
+				<ee:transform doc:name="set response" doc:id="0ed16d50-8da1-4192-9e74-e0d4e3249556">
+			<ee:message>
+				<ee:set-payload resource="dwl/update-flight-details-by-id-response.dwl" />
+			</ee:message>
+		</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="48978eb2-689a-4481-937d-5eefebf444eb" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "status": "error",
+  "message": "Cannot update non-existent entry. There are no flights with flight ID: " ++ vars.id,
+  "correlationId": correlationId
+} 
+]]></ee:set-payload>
+					</ee:message>
+					<ee:variables >
+						<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
+output application/java
+---
+404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

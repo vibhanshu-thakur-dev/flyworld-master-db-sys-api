@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+    
+    <flow name="flyworld-master-db-sys-api-main">
+        <http:listener config-ref="flyworld-master-db-sys-api-httpListenerConfig" path="/api/${api.version}/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body><![CDATA[#[payload]]]></http:body>
+                <http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="flyworld-master-db-sys-api-config" />
+		<error-handler ref="apikit-error-handler" />
+        
+    </flow>
+    <flow name="put:\flights\(id):application\json:flyworld-master-db-sys-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:name="set variable id">
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="update-flights-by-id-flow" doc:id="b72e895e-7356-4636-b170-970c75b85274" name="update-flights-by-id-flow" />
+    </flow>
+    <flow name="delete:\flights\(id):flyworld-master-db-sys-api-config">
+		<ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:name="set variable id">
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <flow-ref doc:name="delete-flights-by-id-flow" doc:id="079008c0-6a16-446a-ab8a-e0269a1cb7f7" name="delete-flights-by-id-flow" />
+    </flow>
+    <flow name="get:\flights:flyworld-master-db-sys-api-config">
+        <flow-ref doc:name="get-all-flights-flow" doc:id="350c1d9c-3aab-485a-909e-31910c7477f0" name="get-all-flights-flow"/>
+    </flow>
+    <flow name="get:\flights\(id):flyworld-master-db-sys-api-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" doc:name="set variable id">
+            <ee:variables>
+                <ee:set-variable variableName="id">attributes.uriParams.'id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+		<flow-ref doc:name="get-flight-by-id-flow" doc:id="32e74233-3a07-4018-bd0c-b535ae45864f" name="get-flight-by-id-flow"/>
+    </flow>
+    <flow name="post:\flights:application\json:flyworld-master-db-sys-api-config">
+        <flow-ref doc:name="add-new-flight-details-flow" doc:id="7e66c1e4-da85-4014-a7bd-eef96f646beb" name="add-new-flight-details-flow"/>
+    </flow>
+</mule>

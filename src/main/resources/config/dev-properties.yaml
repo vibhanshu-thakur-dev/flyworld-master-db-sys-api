@@ -1,0 +1,17 @@
+listner:
+  port: "8082"
+
+api:
+  id: "18002945"
+
+database:
+  port: "3306"
+  host: "34.171.251.251"
+  user: "root"
+  dbName: "flights_master"
+  reconnection:
+    frequency: "2000"
+    attempts: "5"
+    
+keystore:
+  path: "cert/flyworld-dev.jks"

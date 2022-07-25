@@ -1,0 +1,3 @@
+api:
+  version: "v1"
+  name: "flyworld-master-db-sys-api"

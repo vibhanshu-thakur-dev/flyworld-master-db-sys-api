@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="add-new-flight-details-flow" doc:id="f3d77d6e-b4e7-432c-8151-eeaadcd69fba" >
+		<idempotent-message-validator doc:name="Idempotent Message Validator" doc:id="849f6d87-77d0-4866-835e-b112f7b215db" objectStore="Idempotency_object_store" idExpression="#[%dw 2.0&#10;import * from dw::core::Binaries&#10;output text/plain&#10;import dw::Crypto&#10;---&#10;Crypto::hashWith(toBase64(write(payload)),'MD5')]"/>
+		<flow-ref doc:name="validate-flight-time-sub-flow" doc:id="ec086f5a-f1f4-45b5-b359-2fae49178caf" name="validate-flight-time-sub-flow"/>
+		<ee:transform doc:name="set data for insertion" doc:id="5a67826a-ac0c-4455-aadd-52f4c82a55a0" >
+			<ee:message >
+				<ee:set-payload resource="dwl/set-data-for-insertion.dwl" />
+			</ee:message>
+		</ee:transform>
+		<db:insert doc:name="insert new flight details" doc:id="ac1cb05a-8938-4232-8837-7d2c8fb8950c" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT INTO `flights_master`.`flight_details` (`flightNumber`, `source`, `destination`, `sourceCode`, `destinationCode`, `hasBusinessClass`, `flightTime`) VALUES (:flightNumber, :source, :destination, :sourceCode, :destinationCode, :hasBusinessClass, :flightTime);]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'flightNumber': payload.flightNumber, 'source': payload.source, 'destination': payload.destination, 'sourceCode': payload.sourceCode, 'destinationCode': payload.destinationCode, 'hasBusinessClass': payload.hasBusinessClass, 'flightTime': payload.flightTime}]]]></db:input-parameters>
+		</db:insert>
+		<ee:transform doc:name="set response" doc:id="fadf45f7-2200-43a8-8221-2ae56ad45e9c" >
+			<ee:message >
+				<ee:set-payload resource="dwl/set-response-for-add-flight-details.dwl" />
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="get-all-flights-flow" doc:id="696226a2-94e7-4eab-96d9-9c2b12baae10" >
+		<db:select doc:name="query flights" doc:id="fbe14cfc-00cb-4aac-842f-2a71c309bf74" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from flight_details where source= :source and destination= :destination and flightTime like :date;]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{'source':attributes.queryParams['source'], 'destination': attributes.queryParams['destination'], 'date': ("%" ++ attributes.queryParams['date'] ++ "%")}]]]></db:input-parameters>
+		</db:select>
+		<ee:transform doc:name="convert to json" doc:id="43c2a271-3b90-4c32-b70c-800e3860af74" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
