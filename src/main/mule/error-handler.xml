@@ -119,7 +119,7 @@ output application/java
 			<flow-ref doc:name="format-error-response-sub-flow" doc:id="6d806df1-41c7-46a9-8118-b1fd522f31e3" name="format-error-response-sub-flow"/>
 		</on-error-continue>
 		
-		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bf6bc1a1-3058-4c9d-9750-75a0bf183cde" type="DB:CANNOT_REACH,DB:CONNECTIVITY">
+		<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="bf6bc1a1-3058-4c9d-9750-75a0bf183cde" type="VALIDATION:INVALID_BOOLEAN">
 			<logger level="ERROR" doc:name="Log error" doc:id="ccb3d9d5-b106-4c1d-8fbf-d20c02c98244" message="#[output
 &#10;application/json
 &#10;---
@@ -138,12 +138,6 @@ output application/java
 output application/java
 ---
 500]]></ee:set-variable>
-					<ee:set-variable variableName="errorResponse" ><![CDATA[%dw 2.0
-output application/java
----
-{
-	errorMessage: "Connection to the datbase could not be established."
-}]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
 			<flow-ref doc:name="format-error-response-sub-flow" doc:id="024212f6-6e78-4943-8fd4-32465abb3c47" name="format-error-response-sub-flow"/>

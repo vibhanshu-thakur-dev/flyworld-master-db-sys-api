@@ -1,0 +1,544 @@
+{
+	"info": {
+		"_postman_id": "1776ae98-8612-4425-9552-ec4a128a4814",
+		"name": "Flyworld Master DB Sys API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "1068875"
+	},
+	"item": [
+		{
+			"name": "local",
+			"item": [
+				{
+					"name": "Health Check Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/ping",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Flights",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/flights?source=London&destination=Dubai&date=2022-07-28",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights"
+							],
+							"query": [
+								{
+									"key": "source",
+									"value": "London"
+								},
+								{
+									"key": "destination",
+									"value": "Dubai"
+								},
+								{
+									"key": "date",
+									"value": "2022-07-28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new flight",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n    {\r\n        \"destinationCode\": \"DXB\",\r\n        \"hasBusinessClass\": true,\r\n        \"flightNumber\": \"WA102\",\r\n        \"destination\": \"Dubai\",\r\n        \"source\": \"London\",\r\n        \"flightTime\": \"2022-07-28T12:12:30\",\r\n        \"sourceCode\": \"LHR\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/flights",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get flight by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update flight by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"destinationCode\": \"LHR\",\r\n    \"hasBusinessClass\": true,\r\n    \"flightNumber\": \"WA110\",\r\n    \"destination\": \"London\",\r\n    \"source\": \"Bangalore\",\r\n    \"flightTime\": \"2022-07-23T12:12:30\",\r\n    \"sourceCode\": \"BLR\"\r\n}"
+						},
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flight by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.local}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.local}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "dev",
+			"item": [
+				{
+					"name": "Health Check Endpoint",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/ping",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"ping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Flights",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/flights?source=London&destination=Dubai&date=2022-07-28",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights"
+							],
+							"query": [
+								{
+									"key": "source",
+									"value": "London"
+								},
+								{
+									"key": "destination",
+									"value": "Dubai"
+								},
+								{
+									"key": "date",
+									"value": "2022-07-28"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add new flight",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\r\n    {\r\n        \"destinationCode\": \"DXB\",\r\n        \"hasBusinessClass\": true,\r\n        \"flightNumber\": \"WA102\",\r\n        \"destination\": \"Dubai\",\r\n        \"source\": \"London\",\r\n        \"flightTime\": \"2022-07-28T12:12:30\",\r\n        \"sourceCode\": \"LHR\"\r\n    }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/flights",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get flight by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update flight by ID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"destinationCode\": \"LHR\",\r\n    \"hasBusinessClass\": true,\r\n    \"flightNumber\": \"WA110\",\r\n    \"destination\": \"London\",\r\n    \"source\": \"Bangalore\",\r\n    \"flightTime\": \"2022-07-23T12:12:30\",\r\n    \"sourceCode\": \"BLR\"\r\n}"
+						},
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete flight by ID",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "client_id",
+								"value": "{{client_id}}",
+								"type": "text"
+							},
+							{
+								"key": "client_secret",
+								"value": "{{client_secret}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://{{hostname.dev}}/api/v1/flights/21",
+							"protocol": "https",
+							"host": [
+								"{{hostname.dev}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"flights",
+								"21"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "client_id",
+			"value": "70667587c4d842f19453c4a571ea110b",
+			"type": "string"
+		},
+		{
+			"key": "client_secret",
+			"value": "0DEAaA8720764F739082439B2c89bE3d",
+			"type": "string"
+		},
+		{
+			"key": "hostname.local",
+			"value": "localhost:8082",
+			"type": "string"
+		},
+		{
+			"key": "hostname.dev",
+			"value": "flyworld-master-db-sys-api-dev-v1.us-e2.cloudhub.io",
+			"type": "string"
+		}
+	]
+}
