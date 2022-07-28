@@ -13,10 +13,20 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 				<ee:set-payload resource="dwl/set-data-for-insertion.dwl" />
 			</ee:message>
 		</ee:transform>
-		<db:insert doc:name="insert new flight details" doc:id="ac1cb05a-8938-4232-8837-7d2c8fb8950c" config-ref="Database_Config">
-			<db:sql ><![CDATA[INSERT INTO `flights_master`.`flight_details` (`flightNumber`, `source`, `destination`, `sourceCode`, `destinationCode`, `hasBusinessClass`, `flightTime`) VALUES (:flightNumber, :source, :destination, :sourceCode, :destinationCode, :hasBusinessClass, :flightTime);]]></db:sql>
-			<db:input-parameters ><![CDATA[#[{'flightNumber': payload.flightNumber, 'source': payload.source, 'destination': payload.destination, 'sourceCode': payload.sourceCode, 'destinationCode': payload.destinationCode, 'hasBusinessClass': payload.hasBusinessClass, 'flightTime': payload.flightTime}]]]></db:input-parameters>
+		<choice doc:name="Choice" doc:id="dd133938-e468-4ac9-aa48-84a536c90447" >
+			<when expression="#[isEmpty(payload.flightId)]">
+				<db:insert doc:name="insert new flight details" doc:id="ac1cb05a-8938-4232-8837-7d2c8fb8950c" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO `flights_master`.`flight_details` (`flightNumber`, `source`, `destination`, `sourceCode`, `destinationCode`, `hasBusinessClass`, `flightTime`) VALUES (:flightNumber, :source, :destination, :sourceCode, :destinationCode, :hasBusinessClass, :flightTime);]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'flightNumber': payload.flightNumber, 'source': payload.source, 'destination': payload.destination, 'sourceCode': payload.sourceCode, 'destinationCode': payload.destinationCode, 'hasBusinessClass': payload.hasBusinessClass, 'flightTime': payload.flightTime}]]]></db:input-parameters>
 		</db:insert>
+			</when>
+			<otherwise>
+				<db:insert doc:name="insert new flight details" doc:id="591edd92-8605-438a-a5e7-023ad8caad07" config-ref="Database_Config">
+			<db:sql><![CDATA[INSERT INTO `flights_master`.`flight_details` (`flightId`,`flightNumber`, `source`, `destination`, `sourceCode`, `destinationCode`, `hasBusinessClass`, `flightTime`) VALUES (:flightId, :flightNumber, :source, :destination, :sourceCode, :destinationCode, :hasBusinessClass, :flightTime);]]></db:sql>
+			<db:input-parameters><![CDATA[#[{'flightId': payload.flightId, 'flightNumber': payload.flightNumber, 'source': payload.source, 'destination': payload.destination, 'sourceCode': payload.sourceCode, 'destinationCode': payload.destinationCode, 'hasBusinessClass': payload.hasBusinessClass, 'flightTime': payload.flightTime}]]]></db:input-parameters>
+		</db:insert>
+			</otherwise>
+		</choice>
 		<ee:transform doc:name="set response" doc:id="fadf45f7-2200-43a8-8221-2ae56ad45e9c" >
 			<ee:message >
 				<ee:set-payload resource="dwl/set-response-for-add-flight-details.dwl" />

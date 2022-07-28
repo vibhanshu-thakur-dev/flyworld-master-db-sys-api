@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:munit="http://www.mulesoft.org/schema/mule/munit"
+	xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<munit:config name="master-db-sys-api-test-suite.xml" >
+		<munit:parameterizations file="munit-parameterization.yaml" />
+	</munit:config>
+	<global-property doc:name="Global Property" doc:id="7c7e41a2-e6e1-4cd5-a36f-168adb48fa76" name="mule.env" value="dev" />
+	<global-property doc:name="Global Property" doc:id="c8951a27-4e36-40df-aa06-00c28f8fc4eb" name="encrypt.key" value="mulesoft123456789mulesoftdevelop" />
+	<http:request-config name="HTTP_Request_configuration" basePath="/api/v1">
+		<http:request-connection protocol="HTTPS" host="localhost" port="8082" >
+			<tls:context >
+				<tls:trust-store insecure="true" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<munit:test name="master-db-sys-api-test-suiteTest" doc:id="119c4a8c-32e5-49dc-9a38-777144459bbf" >
+		<munit:enable-flow-sources >
+			<munit:enable-flow-source value="add-new-flight-details-flow" />
+			<munit:enable-flow-source value="flyworld-master-db-sys-api-main" />
+			<munit:enable-flow-source value="get:\flights\(id):flyworld-master-db-sys-api-config" />
+			<munit:enable-flow-source value="get:\ping:flyworld-master-db-sys-api-config" />
+			<munit:enable-flow-source value="put:\flights\(id):application\json:flyworld-master-db-sys-api-config"/>
+			<munit:enable-flow-source value="delete:\flights\(id):flyworld-master-db-sys-api-config"/>
+			<munit:enable-flow-source value="get:\flights:flyworld-master-db-sys-api-config"/>
+			<munit:enable-flow-source value="get:\flights\(id):flyworld-master-db-sys-api-config"/>
+			<munit:enable-flow-source value="post:\flights:application\json:flyworld-master-db-sys-api-config"/>
+		</munit:enable-flow-sources>
+		<munit:execution >
+			<set-payload value="#[output &#10;application/json &#10;--- &#10;if(isBlank(Mule::p('payloadUrl')))&#10;	{}&#10;else&#10;	readUrl(Mule::p('payloadUrl'))]" doc:name="Set Payload" doc:id="901e16c5-984d-452e-b0ce-721d5f38edce" />
+			<http:request method="${method}" doc:name="Request" doc:id="872a1213-2d04-4e8f-9531-04c24fc3923c" config-ref="HTTP_Request_configuration" path="${path}">
+				 <http:headers><![CDATA[#[{"Accept":"application/json","Content-Type":"application/json"}]]]></http:headers>
+				<http:query-params ><![CDATA[#[output application/java --- read(Mule::p('queryParams'))]]]></http:query-params>
+				<http:response-validator >
+					<http:success-status-code-validator values="0..599" />
+				</http:response-validator>
+			
+</http:request>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Assert http response code" doc:id="45bd3b4b-18f4-443d-868b-a8554560189c" actual="#[attributes.statusCode]" expected="#[Mule::p('statusCode') as Number]"/>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

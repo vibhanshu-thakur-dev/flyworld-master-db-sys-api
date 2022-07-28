@@ -1,0 +1,80 @@
+get-ping-check-200:
+  path: "/ping"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "200"
+  payloadUrl: ""
+  queryParams: "{}"
+
+get-all-flights-200:
+  path: "/flights"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "200"
+  queryParams: "{'date':'2022-08-02','source':'London','destination':'Bangalore'}"
+  payloadUrl: ""
+
+create-new-flight-200:
+  path: "/flights"
+  method: "POST"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "201"
+  payloadUrl: "classpath://scaffolder/request/post_flights_application_json.json"
+  queryParams: "{}"
+
+update-flight-by-id-200:
+  path: "/flights/2200"
+  method: "PUT"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "200"
+  payloadUrl: "classpath://scaffolder/request/put_flights_{id}_application_json.json"
+  queryParams: "{}"
+      
+get-flight-by-id-200:
+  path: "/flights/2200"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "200"
+  payloadUrl: ""
+  queryParams: "{}"
+  
+delete-flight-by-id-200:
+  path: "/flights/2100"
+  method: "DELETE"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "200"
+  payloadUrl: ""
+  queryParams: "{}"
+  
+apikit-400:
+  path: "/flights"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "400"
+  payloadUrl: ""
+  queryParams: "{}"
+  
+apikit-404:
+  path: "/flightsNew"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "404"
+  payloadUrl: ""
+  queryParams: "{}"
+  
+apikit-415:
+  path: "/flights"
+  method: "GET"
+  correlationId: "success-correlation-id"
+  contentType: "application/xml"  
+  statusCode: "400"
+  payloadUrl: ""
+  queryParams: "{}"
