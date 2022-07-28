@@ -43,14 +43,14 @@ get-flight-by-id-200:
   payloadUrl: ""
   queryParams: "{}"
   
-delete-flight-by-id-200:
-  path: "/flights/2100"
-  method: "DELETE"
-  correlationId: "success-correlation-id"
-  contentType: "application/json"  
-  statusCode: "200"
-  payloadUrl: ""
-  queryParams: "{}"
+#delete-flight-by-id-200:
+#  path: "/flights/2100"
+#  method: "DELETE"
+#  correlationId: "success-correlation-id"
+#  contentType: "application/json"  
+#  statusCode: "200"
+#  payloadUrl: ""
+#  queryParams: "{}"
   
 apikit-400:
   path: "/flights"
@@ -77,4 +77,23 @@ apikit-415:
   contentType: "application/xml"  
   statusCode: "400"
   payloadUrl: ""
+  queryParams: "{}"
+  
+apikit-405:
+  path: "/flights"
+  method: "DELETE"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "405"
+  payloadUrl: ""
+  queryParams: "{}"
+
+
+validation-faliure-create-new-flight-500:
+  path: "/flights"
+  method: "POST"
+  correlationId: "success-correlation-id"
+  contentType: "application/json"  
+  statusCode: "400"
+  payloadUrl: "classpath://scaffolder/request/post_flights_application_json_validation_error.json"
   queryParams: "{}"

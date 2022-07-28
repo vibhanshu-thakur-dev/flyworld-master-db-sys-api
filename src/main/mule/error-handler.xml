@@ -137,7 +137,7 @@ output application/java
 					<ee:set-variable variableName="httpStatus" ><![CDATA[%dw 2.0
 output application/java
 ---
-500]]></ee:set-variable>
+400]]></ee:set-variable>
 				</ee:variables>
 			</ee:transform>
 			<flow-ref doc:name="format-error-response-sub-flow" doc:id="024212f6-6e78-4943-8fd4-32465abb3c47" name="format-error-response-sub-flow"/>
